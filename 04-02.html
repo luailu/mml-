@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS定位演示 - 相对定位与绝对定位</title>
+  <style>
+    /* 可自定义变量 */
+    :root {
+      /* 布局变量 */
+      --container-width: 1200px;
+      --column-width: 380px;
+      --column-gap: 20px;
+      
+      /* 颜色变量 */
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --background-color: #f8f9fa;
+      --text-color: #212529;
+      --highlight-color: #ffd166;
+      --code-bg: #f1f3f5;
+      
+      /* 字体变量 */
+      --main-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --heading-font: 'Montserrat', 'Arial Rounded MT Bold', sans-serif;
+      --font-size: 18px;
+      --line-height: 1.7;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      width: var(--container-width);
+      margin: 0 auto;
+      padding: 40px 20px;
+      font-family: var(--main-font);
+      font-size: var(--font-size);
+      line-height: var(--line-height);
+      color: var(--text-color);
+      background-color: var(--background-color);
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    h1 {
+      font-family: var(--heading-font);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+    }
+    
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--column-gap);
+    }
+    
+    .column {
+      width: var(--column-width);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      padding: 25px;
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .column:hover {
+      transform: translateY(-10px);
+    }
+    
+    .column::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--primary-color);
+    }
+    
+    h2 {
+      font-family: var(--heading-font);
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px dashed var(--highlight-color);
+    }
+    
+    p {
+      margin-bottom: 15px;
+    }
+    
+    .bg {
+      background-color: var(--highlight-color);
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    
+    .relative {
+      position: relative;
+      top: 50px;
+      z-index: 1;
+    }
+    
+    .absolute {
+      position: absolute;
+      top: 50px;
+      z-index: 1;
+    }
+    
+    code {
+      display: block;
+      background: var(--code-bg);
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      overflow-x: auto;
+    }
+    
+    .note {
+      background: #e9ecef;
+      padding: 15px;
+      border-left: 4px solid var(--primary-color);
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 1240px) {
+      body {
+        width: 95%;
+      }
+      
+      .container {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .column {
+        margin-bottom: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CSS定位演示</h1>
+    <div class="subtitle">相对定位 vs 绝对定位 - 可视化比较</div>
+  </header>
+  
+  <main class="container">
+    <div class="column">
+      <h2>正常信息流</h2>
+      <p>孩子，你真是快活啊，一早晨坐在泥土里，耍着折下来的小树枝。</p>
+      <p>我微笑着看你在那里耍着那根折下来的小树枝。</p>
+      <p class="bg">我正忙着算账，一小时一小时在那里加叠数字。</p>
+      <p>也许你在看我，想到："这种好没趣的游戏，竟把你的一早晨的好时间浪费掉了！"</p>
+      <p>孩子，我忘了聚精会神玩耍树枝与泥饼的方法了。</p>
+    </div>
+    
+    <div class="column">
+      <h2>相对定位</h2>
+      <p>孩子，你真是快活啊，一早晨坐在泥土里，耍着折下来的小树枝。</p>
+      <p>我微笑着看你在那里耍着那根折下来的小树枝。</p>
+      <p class="bg relative">我正忙着算账，一小时一小时在那里加叠数字。</p>
+      <p>也许你在看我，想到："这种好没趣的游戏，竟把你的一早晨的好时间浪费掉了！"</p>
+      <p>孩子，我忘了聚精会神玩耍树枝与泥饼的方法了。</p>
+      <code>.relative { 
+  position: relative; 
+  top: 50px;
+}</code>
+      <div class="note">
+        <strong>说明：</strong> 相对定位的元素会从正常文档流中的位置偏移，但原始空间仍保留。
+      </div>
+    </div>
+    
+    <div class="column">
+      <h2>绝对定位</h2>
+      <p>孩子，你真是快活啊，一早晨坐在泥土里，耍着折下来的小树枝。</p>
+      <p>我微笑着看你在那里耍着那根折下来的小树枝。</p>
+      <p class="bg absolute">我正忙着算账，一小时一小时在那里加叠数字。</p>
+      <p>也许你在看我，想到："这种好没趣的游戏，竟把你的一早晨的好时间浪费掉了！"</p>
+      <p>孩子，我忘了聚精会神玩耍树枝与泥饼的方法了。</p>
+      <code>.absolute { 
+  position: absolute; 
+  top: 50px;
+}</code>
+      <div class="note">
+        <strong>说明：</strong> 绝对定位的元素会脱离文档流，相对于最近的定位祖先元素定位。
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <p>CSS定位演示 | 通过改变定位属性理解元素在文档流中的行为</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS核心概念：背景、盒模型、布局、动画</title>
+    <style>
+        /* 全局样式重置与基础设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: "微软雅黑", sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* 页面容器：居中显示内容 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            min-height: 100vh;
+        }
+
+        /* 主标题样式 */
+        h1 {
+            background-image: url("https://picsum.photos/id/1042/1200/300"); /* 在线风景图 */
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-size: cover; /* 背景图自适应 */
+            text-align: center;
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* 文本阴影增强可读性 */
+        }
+
+        /* 模块通用样式 */
+        .section {
+            margin-bottom: 50px;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background-color: #fff;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* 背景模块特有样式 */
+        .pronunciation {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .pronunciation strong {
+            color: #e74c3c;
+        }
+
+        /* 盒模型模块特有样式 */
+        .box-model-demo .box-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .box {
+            width: 200px;
+            height: 200px;
+            border: dashed red 1px;
+            padding: 20px;
+            margin-bottom: 2em;
+            border-radius: 20px;
+            background-color: #fff;
+            transition: transform 0.3s;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+        }
+
+        .box.border-box {
+            box-sizing: border-box; /* 盒模型包含padding和border */
+            border-color: blue;
+        }
+
+        .box-model-demo p {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        /* 布局模块特有样式 */
+        .layout-demo .demo-container {
+            margin-top: 20px;
+        }
+
+        .display-demo,
+        .flex-demo {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .display-demo h3,
+        .flex-demo h3 {
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+
+        .display-demo p {
+            display: inline;
+            margin: 0 10px;
+            padding: 5px 10px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap; /* 允许换行 */
+            gap: 15px;
+        }
+
+        .flex-container p {
+            border: 1px solid red;
+            padding: 10px;
+            min-width: 50px;
+            word-break: break-all; /* 长文本换行 */
+            background-color: #fff;
+            border-radius: 4px;
+        }
+
+        /* 动画模块特有样式 */
+        .animation-demo {
+            text-align: center;
+        }
+
+        .animate-box {
+            width: 100px;
+            height: 100px;
+            background-color: rgb(192, 184, 184);
+            text-align: center;
+            line-height: 100px;
+            margin: 2em auto;
+            border-radius: 0;
+            transition: all 0.3s ease; /* 过渡动画 */
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .animate-box:hover {
+            border-radius: 100px; /* 圆形过渡 */
+            color: white;
+            background-color: rgb(190, 21, 21);
+            transform: scale(1.1) rotate(5deg); /* 缩放+旋转 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSS 核心概念：背景、盒模型、布局、动画</h1>
+
+        <!-- 背景模块 -->
+        <section class="section background-demo">
+            <h2 class="section-title">1. 背景 (Background)</h2>
+            <p>背景属性用于设置元素的背景效果，可控制颜色、图片、位置、重复方式等。</p>
+            <div class="pronunciation">
+                <p><strong>cascading</strong> 的音标是 /kæˈskeɪdɪŋ/，意为"层叠的"</p>
+                <p><strong>linear</strong>：英 [ˈlɪniə(r)] 美 [ˈlɪniər]，意为"线性的"</p>
+            </div>
+        </section>
+
+        <!-- 盒模型模块 -->
+        <section class="section box-model-demo">
+            <h2 class="section-title">2. 盒模型 (Box Model)</h2>
+            <p>盒模型是CSS布局基础，由内容区(content)、内边距(padding)、边框(border)和外边距(margin)组成。</p>
+            <div class="box-container">
+                <div>
+                    <p>默认盒模型 (content-box)</p>
+                    <div class="box">box 中的内容 1<br>width=200px（不含padding和border）</div>
+                </div>
+                <div>
+                    <p>border-box盒模型</p>
+                    <div class="box border-box">box 中的内容 2<br>width=200px（含padding和border）</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 布局模块 -->
+        <section class="section layout-demo">
+            <h2 class="section-title">3. 布局 (Layout)</h2>
+            <p>布局控制元素排列方式，常用display属性和Flex布局实现不同的页面结构。</p>
+
+            <div class="demo-container">
+                <div class="display-demo">
+                    <h3>display: inline 示例（元素在同一行显示）</h3>
+                    <p>段1</p>
+                    <p>段2</p>
+                    <p>段3</p>
+                    <p>段4</p>
+                </div>
+
+                <div class="flex-demo">
+                    <h3>Flex布局示例（灵活排列子元素）</h3>
+                    <div class="flex-container">
+                        <p>111111111111111111111</p>
+                        <p>222222222222222</p>
+                        <p>3</p>
+                        <p>4</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 动画模块 -->
+        <section class="section animation-demo">
+            <h2 class="section-title">4. 动画 (Animation)</h2>
+            <p>动画通过transition属性实现元素状态变化的平滑过渡，需定义起始状态、结束状态和过渡时长。</p>
+            <div class="animate-box">悬停查看动画效果</div>
+        </section>
+    </div>
+</body>
+</html>
