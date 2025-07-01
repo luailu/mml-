@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 异步编程实践</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #e6e6e6;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #4cc9f0, #4361ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0aec0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            background: rgba(30, 33, 45, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        h2 {
+            color: #4cc9f0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed rgba(76, 201, 240, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: #f72585;
+        }
+        
+        .console {
+            background: #1e222d;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            border: 1px solid rgba(255,255,255,0.05);
+            min-height: 120px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .console-line {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .log-time {
+            color: #6c757d;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.5);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(90deg, #f72585, #b5179e);
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        #demo {
+            margin-top: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(30, 33, 45, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: rgba(67, 97, 238, 0.3);
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        tr:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(76, 201, 240, 0.3);
+            border-radius: 50%;
+            border-top-color: #4cc9f0;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .success {
+            color: #4cc9f0;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+        
+        .error {
+            color: #ef233c;
+            border: 1px solid rgba(239, 35, 60, 0.3);
+        }
+        
+        .info {
+            color: #ffd166;
+            border: 1px solid rgba(255, 209, 102, 0.3);
+        }
+        
+        .explanation {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4361ee;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript 异步编程实践</h1>
+            <p class="subtitle">探索setTimeout、Promise和async/await的使用，从GitHub API获取数据</p>
+        </header>
+        
+        <div class="section">
+            <h2><i class="fas fa-code"></i> 异步操作控制台</h2>
+            <div class="explanation">
+                <p>JavaScript异步操作允许代码在等待耗时操作（如网络请求）完成时继续执行其他任务。</p>
+                <p>此控制台展示了setTimeout、Promise和async/await的执行顺序。</p>
+            </div>
+            
+            <div class="controls">
+                <button class="btn" onclick="runSetTimeoutDemo()">
+                    <i class="fas fa-clock"></i> 运行setTimeout示例
+                </button>
+                <button class="btn" onclick="runPromiseDemo()">
+                    <i class="fas fa-handshake"></i> 运行Promise示例
+                </button>
+                <button class="btn" onclick="runAsyncAwaitDemo()">
+                    <i class="fas fa-bolt"></i> 运行Async/Await示例
+                </button>
+            </div>
+            
+            <div class="console" id="async-console">
+                <div class="console-line">控制台已就绪。请点击上方按钮运行示例。</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2><i class="fab fa-github"></i> GitHub提交记录</h2>
+            <div class="explanation">
+                <p>此部分使用async/await从GitHub API获取仓库提交记录。</p>
+                <p>我们将展示用户 <code>yangjh-xbmu</code> 的 <code>Web-develop</code> 仓库的提交日期。</p>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="fetchCommitDates()">
+                    <i class="fas fa-download"></i> 获取提交日期
+                </button>
+                <button class="btn" onclick="clearData()">
+                    <i class="fas fa-trash"></i> 清除数据
+                </button>
+            </div>
+            
+            <div id="status-area"></div>
+            <div id="demo"></div>
+        </div>
+        
+        <footer>
+            <p>异步编程演示 &copy; 2023 | 使用原生JavaScript实现</p>
+            <p>探索现代Web开发中的异步编程技术</p>
+        </footer>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const asyncConsole = document.getElementById('async-console');
+        const demoArea = document.getElementById('demo');
+        const statusArea = document.getElementById('status-area');
+        
+        // 日志函数
+        function logToConsole(message) {
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            
+            const logLine = document.createElement('div');
+            logLine.className = 'console-line';
+            logLine.innerHTML = `<span class="log-time">${timeString}</span> ${message}`;
+            asyncConsole.prepend(logLine);
+        }
+        
+        // 更新状态
+        function updateStatus(message, type = 'info') {
+            statusArea.innerHTML = `
+                <div class="status ${type}">
+                    ${type === 'loading' ? '<div class="loading"></div>' : ''}
+                    ${message}
+                </div>
+            `;
+        }
+        
+        // 清除控制台
+        function clearConsole() {
+            asyncConsole.innerHTML = '<div class="console-line">控制台已清空</div>';
+        }
+        
+        // 清除数据
+        function clearData() {
+            demoArea.innerHTML = '';
+            statusArea.innerHTML = '';
+        }
+        
+        // setTimeout示例
+        function runSetTimeoutDemo() {
+            clearConsole();
+            logToConsole('开始执行setTimeout示例...');
+            
+            logToConsole('调用setTimeout(2000ms)');
+            
+            setTimeout(() => {
+                logToConsole('setTimeout回调执行 (延迟2000ms)');
+            }, 2000);
+            
+            logToConsole('继续执行后续代码');
+        }
+        
+        // Promise示例
+        function runPromiseDemo() {
+            clearConsole();
+            logToConsole('开始执行Promise示例...');
+            
+            function getSomething() {
+                logToConsole('创建Promise对象');
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        logToConsole('Promise内部setTimeout完成 (1000ms)');
+                        resolve();
+                    }, 1000);
+                });
+            }
+            
+            logToConsole('调用getSomething()');
+            getSomething().then(() => {
+                logToConsole('Promise的.then()回调执行');
+            });
+            
+            logToConsole('继续执行后续代码');
+        }
+        
+        // Async/Await示例
+        function runAsyncAwaitDemo() {
+            clearConsole();
+            logToConsole('开始执行Async/Await示例...');
+            
+            async function getSomething2() {
+                logToConsole('进入async函数');
+                await new Promise((resolve) => {
+                    setTimeout(() => {
+                        logToConsole('await的Promise完成 (1000ms)');
+                        resolve();
+                    }, 1000);
+                });
+                logToConsole('async函数继续执行');
+            }
+            
+            logToConsole('调用立即执行async函数');
+            (async () => {
+                await getSomething2();
+                logToConsole('async函数执行完成');
+            })();
+            
+            logToConsole('继续执行后续代码');
+        }
+        
+        // 获取GitHub提交日期
+        async function fetchCommitDates() {
+            // 清除之前的显示
+            demoArea.innerHTML = '';
+            updateStatus('正在从GitHub API获取数据...', 'loading');
+            
+            try {
+                const dates = await getAllCommitDates('yangjh-xbmu', 'Web-develop');
+                
+                if (dates.length > 0) {
+                    updateStatus(`成功获取到 ${dates.length} 条提交记录`, 'success');
+                    showCommitDatesTable(dates);
+                } else {
+                    updateStatus('未获取到提交记录', 'error');
+                }
+            } catch (error) {
+                updateStatus(`获取数据失败: ${error.message}`, 'error');
+                console.error('获取提交日期失败:', error);
+            }
+        }
+        
+        async function getAllCommitDates(owner, repo) {
+            const url = `https://api.github.com/repos/${owner}/${repo}/commits`;
+            
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        throw new Error('API速率限制，请稍后再试');
+                    }
+                    throw new Error(`网络响应失败: ${response.status} ${response.statusText}`);
+                }
+                
+                const commits = await response.json();
+                
+                // 提取每个提交的日期并格式化
+                const dates = commits.map(commit => {
+                    const date = new Date(commit.commit.author.date);
+                    return date.toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                });
+                
+                return dates;
+            } catch (error) {
+                throw error;
+            }
+        }
+        
+        function showCommitDatesTable(dates) {
+            if (!dates || dates.length === 0) {
+                demoArea.innerHTML = '<p class="status error">未获取到提交数据</p>';
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>提交日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            dates.forEach((date, idx) => {
+                html += `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td>${date}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <p class="status info">显示最近 ${dates.length} 条提交记录</p>
+            `;
+            
+            demoArea.innerHTML = html;
+        }
+        
+        // 初始化页面
+        window.addEventListener('DOMContentLoaded', () => {
+            logToConsole('页面加载完成。请点击按钮运行示例。');
+        });
+    </script>
+</body>
+</html>

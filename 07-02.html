@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复古网页设计 - 90年代互联网体验</title>
+    <style>
+        /* 基础复古样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at center, rgba(50, 50, 50, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%),
+                repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+            min-height: 100vh;
+        }
+        
+        /* CRT效果覆盖层 */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            z-index: 9999;
+            animation: flicker 0.15s infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        /* 容器样式 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #222;
+            border: 4px double #0f0;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        /* 头部样式 */
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #0f0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ff0;
+            text-shadow: 0 0 10px rgba(255, 255, 0, 0.7);
+            margin-bottom: 15px;
+        }
+        
+        .construction {
+            background-color: #ff0;
+            color: #000;
+            padding: 5px 10px;
+            font-weight: bold;
+            display: inline-block;
+            animation: blink 1s infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        /* 导航样式 */
+        nav {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-button {
+            background-color: #333;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 8px 15px;
+            margin: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 3px 3px 0 rgba(0, 255, 0, 0.3);
+        }
+        
+        .nav-button:hover {
+            background-color: #0f0;
+            color: #000;
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 rgba(0, 255, 0, 0.5);
+        }
+        
+        /* 主要内容区 */
+        .main-content {
+            display: flex;
+            margin: 20px 0;
+        }
+        
+        .sidebar {
+            width: 200px;
+            padding: 15px;
+            border-right: 2px dotted #0f0;
+            margin-right: 20px;
+        }
+        
+        .counter {
+            background-color: #111;
+            border: 2px solid #f00;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .counter h3 {
+            color: #f00;
+            margin-bottom: 10px;
+        }
+        
+        .counter .digits {
+            font-size: 24px;
+            letter-spacing: 3px;
+            color: #0f0;
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            padding: 5px;
+            border: 1px solid #0f0;
+        }
+        
+        .date-time {
+            background-color: #111;
+            border: 2px solid #00f;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .date-time h3 {
+            color: #00f;
+            margin-bottom: 10px;
+        }
+        
+        .mail-icon {
+            text-align: center;
+            animation: spin 4s infinite linear;
+            font-size: 48px;
+            color: #ff0;
+            margin: 20px 0;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        .content {
+            flex: 1;
+            padding: 10px;
+        }
+        
+        h2 {
+            color: #ff0;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .pixel-border {
+            border: 2px solid #0f0;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: rgba(0, 30, 0, 0.3);
+        }
+        
+        .pixel-border h3 {
+            color: #ff0;
+            margin-bottom: 10px;
+        }
+        
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 2px solid #0f0;
+        }
+        
+        th {
+            background-color: #003300;
+            color: #ff0;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #0f0;
+        }
+        
+        td {
+            padding: 10px;
+            border: 1px solid #0f0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(0, 30, 0, 0.2);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 2px solid #0f0;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #0a0;
+        }
+        
+        /* 像素艺术分隔线 */
+        .pixel-divider {
+            height: 10px;
+            background: 
+                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%),
+                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%),
+                #0f0;
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+            margin: 20px 0;
+        }
+        
+        /* 3D按钮 */
+        .btn-3d {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            border-bottom: 4px solid #222;
+            border-right: 4px solid #222;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.1s;
+        }
+        
+        .btn-3d:active {
+            border-bottom: 2px solid #222;
+            border-right: 2px solid #222;
+            transform: translate(2px, 2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- CRT效果覆盖层 -->
+    <div class="crt-overlay"></div>
+    
+    <div class="container">
+        <header>
+            <h1>欢迎来到我的复古网站</h1>
+            <div class="construction">正在建设中...</div>
+            <p>探索90年代的互联网美学</p>
+        </header>
+        
+        <div class="pixel-divider"></div>
+        
+        <nav>
+            <a href="#" class="nav-button">首页</a>
+            <a href="#" class="nav-button">关于我们</a>
+            <a href="#" class="nav-button">网络画廊</a>
+            <a href="#" class="nav-button">酷站链接</a>
+            <a href="#" class="nav-button">留言板</a>
+            <a href="#" class="nav-button">网页素材</a>
+        </nav>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="counter">
+                    <h3>访客计数器</h3>
+                    <div class="digits">0010245</div>
+                    <p>自1998年12月31日</p>
+                </div>
+                
+                <div class="date-time">
+                    <h3>当前时间</h3>
+                    <div id="clock">00:00:00</div>
+                    <div id="date">1999年1月1日</div>
+                </div>
+                
+                <div class="mail-icon">✉</div>
+                <p>给我发邮件：<br>webmaster@retro-site.com</p>
+            </div>
+            
+            <div class="content">
+                <div class="pixel-border">
+                    <h3>网站公告</h3>
+                    <p>欢迎来到我的复古风格网站！这个网站使用HTML 3.2标准构建，在Netscape Navigator 4.0和Internet Explorer 5.0中效果最佳。</p>
+                    <p>本站正在建设中，更多精彩内容即将推出！</p>
+                    <button class="btn-3d">查看详情</button>
+                </div>
+                
+                <h2>网站栏目</h2>
+                
+                <div class="pixel-border">
+                    <h3>友情链接</h3>
+                    <ul>
+                        <li>▶ <a href="#" style="color:#0ff">雅虎门户</a></li>
+                        <li>▶ <a href="#" style="color:#0ff">GeoCities</a></li>
+                        <li>▶ <a href="#" style="color:#0ff">网景公司</a></li>
+                        <li>▶ <a href="#" style="color:#0ff">AltaVista搜索</a></li>
+                    </ul>
+                </div>
+                
+                <h2>网页素材下载</h2>
+                
+                <table>
+                    <tr>
+                        <th>素材名称</th>
+                        <th>类型</th>
+                        <th>大小</th>
+                        <th>下载</th>
+                    </tr>
+                    <tr>
+                        <td>闪烁文字GIF</td>
+                        <td>图片</td>
+                        <td>12KB</td>
+                        <td><button class="btn-3d">下载</button></td>
+                    </tr>
+                    <tr>
+                        <td>分隔线GIF</td>
+                        <td>图片</td>
+                        <td>8KB</td>
+                        <td><button class="btn-3d">下载</button></td>
+                    </tr>
+                    <tr>
+                        <td>背景纹理</td>
+                        <td>图片</td>
+                        <td>25KB</td>
+                        <td><button class="btn-3d">下载</button></td>
+                    </tr>
+                    <tr>
+                        <td>邮件图标</td>
+                        <td>GIF动画</td>
+                        <td>15KB</td>
+                        <td><button class="btn-3d">下载</button></td>
+                    </tr>
+                </table>
+                
+                <div class="pixel-divider"></div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='50'%3E%3Crect width='400' height='50' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Courier New' font-size='14' fill='%230f0'%3EBest viewed with Netscape Navigator 4.0 at 800x600 resolution%3C/text%3E%3C/svg%3E" alt="Best viewed with Netscape">
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 1999 我的复古网站 - 最后更新：1999年6月15日</p>
+            <p>本网站使用HTML 3.2标准构建</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 更新时钟和日期
+        function updateDateTime() {
+            const now = new Date();
+            
+            // 使用复古风格的日期格式
+            const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+            
+            // 使用24小时制
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            
+            document.getElementById('clock').textContent = timeStr;
+            document.getElementById('date').textContent = dateStr;
+        }
+        
+        // 初始调用
+        updateDateTime();
+        
+        // 每秒更新一次
+        setInterval(updateDateTime, 1000);
+        
+        // 模拟CRT显示器的轻微闪烁
+        const crt = document.querySelector('.crt-overlay');
+        setInterval(() => {
+            crt.style.opacity = Math.random() * 0.1 + 0.9;
+        }, 100);
+    </script>
+</body>
+</html>
